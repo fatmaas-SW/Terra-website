@@ -1,0 +1,55 @@
+from pptx import Presentation
+from pptx.util import Inches, Pt
+from pptx.dml.color import RGBColor
+
+# Create a new presentation
+prs = Presentation()
+slide_layout = prs.slide_layouts[6]  # blank slide
+slide = prs.slides.add_slide(slide_layout)
+
+# Set background color to black
+background = slide.background
+fill = background.fill
+fill.solid()
+fill.fore_color.rgb = RGBColor(0, 0, 0)
+
+# Add main glowing shape (outer border)
+shape = slide.shapes.add_shape(
+    autoshape_type_id=1,  # Rectangle
+    left=Inches(1.5),
+    top=Inches(2),
+    width=Inches(7),
+    height=Inches(2)
+)
+shape.fill.solid()
+shape.fill.background()  # Transparent fill
+shape.line.color.rgb = RGBColor(0, 255, 255)
+shape.line.width = Pt(5)
+
+# Add glow effect (simulate via outer border duplication)
+glow = slide.shapes.add_shape(
+    autoshape_type_id=1,
+    left=Inches(1.45),
+    top=Inches(1.95),
+    width=Inches(7.1),
+    height=Inches(2.1)
+)
+glow.fill.background()
+glow.line.color.rgb = RGBColor(0, 200, 255)
+glow.line.width = Pt(2.5)
+
+# Add inner fill area (black)
+inner = slide.shapes.add_shape(
+    autoshape_type_id=1,
+    left=Inches(1.65),
+    top=Inches(2.15),
+    width=Inches(6.7),
+    height=Inches(1.7)
+)
+inner.fill.solid()
+inner.fill.fore_color.rgb = RGBColor(0, 0, 0)
+inner.line.fill.background()
+
+# Save the presentation
+prs.save("futuristic_frame.pptx")
+print("✅ Saved as futuristic_frame.pptx")
